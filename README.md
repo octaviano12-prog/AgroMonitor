@@ -4,7 +4,7 @@ Sistema web para monitoramento operacional agricola, com painel em tempo real, g
 
 ## Stack
 
-- Backend: Node.js, Express, TypeScript, Prisma, PostgreSQL, JWT, Socket.IO.
+- Backend: Node.js, Express, TypeScript, Prisma, MySQL, JWT, Socket.IO.
 - Frontend: Next.js, React, TypeScript, Tailwind CSS, Recharts, Leaflet.
 - Deploy: PM2/Nginx ou Docker.
 
@@ -12,7 +12,7 @@ Sistema web para monitoramento operacional agricola, com painel em tempo real, g
 
 - Node.js 20 recomendado.
 - npm 9 ou superior.
-- PostgreSQL 14 ou superior.
+- MySQL 8 ou superior.
 
 ## Configuracao
 
@@ -25,7 +25,7 @@ cp .env.example .env
 Configure no `.env`:
 
 ```env
-DATABASE_URL="postgresql://usuario:senha@localhost:5432/agromonitor_pro?schema=public"
+DATABASE_URL="mysql://usuario:senha@localhost:3306/agromonitor_pro"
 JWT_SECRET="troque-este-segredo"
 JWT_REFRESH_SECRET="troque-este-segredo-refresh"
 CORS_ORIGIN="http://localhost:3000"
@@ -73,7 +73,7 @@ Configure o Nginx para apontar:
 - `/` para o frontend.
 - `/api` e `/socket.io` para o backend na porta `3001`.
 
-Importante: hospedagem compartilhada comum de PHP/HTML nao e suficiente para este backend. O projeto precisa de Node.js rodando e banco PostgreSQL.
+Importante: hospedagem compartilhada comum de PHP/HTML nao e suficiente para este backend. O projeto precisa de Node.js rodando e banco MySQL.
 
 ## Docker
 

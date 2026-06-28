@@ -1,140 +1,80 @@
-# 🚀 Guia de Instalação Rápida - AgroMonitor Pro
+# Guia de Instalacao - AgroMonitor Pro
 
-## Pré-requisitos
+## Pre-requisitos
 
-- Node.js 18+ e npm 9+
-- PostgreSQL 14+
+- Node.js 20+
+- npm 9+
+- MySQL 8+
 - Git
 
-## Instalação
+## Banco de dados MySQL
 
-### 1. Extraia o projeto
+Crie um banco MySQL:
 
-```bash
-tar -xzf agromonitor-pro-nodejs.tar.gz
-cd agromonitor-pro-full
+```sql
+CREATE DATABASE agromonitor_pro CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'agromonitor'@'%' IDENTIFIED BY 'troque_esta_senha';
+GRANT ALL PRIVILEGES ON agromonitor_pro.* TO 'agromonitor'@'%';
+FLUSH PRIVILEGES;
 ```
 
-### 2. Execute o setup automático
+Na Hostinger, use o painel de **Bancos de dados MySQL** e copie:
 
-```bash
-chmod +x scripts/setup.sh
-./scripts/setup.sh
-```
+- host
+- porta
+- nome do banco
+- usuario
+- senha
 
-### 3. Configure o banco de dados PostgreSQL
+Depois adicione esta variavel no app Node:
 
-```bash
-# Crie o banco de dados
-createdb agromonitor_pro
-
-# Ou via psql
-psql -U postgres
-CREATE DATABASE agromonitor_pro;
-\q
-```
-
-### 4. Edite o arquivo .env
-
-```bash
-nano .env
-```
-
-Configure:
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/agromonitor_pro?schema=public"
-JWT_SECRET="seu-secret-jwt-super-seguro"
-OPENAI_API_KEY="sk-sua-chave-openai"
+DATABASE_URL="mysql://USUARIO:SENHA@HOST:3306/NOME_DO_BANCO"
 ```
 
-### 5. Execute as migrations
+Tambem configure:
 
-```bash
-npm run prisma:migrate
+```env
+NODE_ENV="production"
+JWT_SECRET="troque-este-segredo"
+JWT_REFRESH_SECRET="troque-este-segredo-refresh"
+CORS_ORIGIN="https://ghostwhite-herring-312763.hostingersite.com"
+NEXT_PUBLIC_API_URL="https://ghostwhite-herring-312763.hostingersite.com"
+NEXT_PUBLIC_SOCKET_URL="https://ghostwhite-herring-312763.hostingersite.com"
 ```
 
-### 6. Popule o banco de dados
+## Instalar e compilar
 
 ```bash
+npm install
+npm run build
+npm run prisma:migrate:prod
 npm run seed
+npm start
 ```
 
-### 7. Inicie a aplicação
+## Configuracao Hostinger
 
-```bash
-npm run dev
-```
+- Diretorio raiz: `./`
+- Comando de construcao: `npm run build`
+- Diretorio de saida: `./`
+- Arquivo de entrada: `server/dist/server.js`
+- Node: 20 ou superior
 
-## 🌐 Acessar
+## Login inicial
 
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:3001
-- **Swagger Docs**: http://localhost:3001/api/docs
+Depois de rodar `npm run seed`:
 
-## 🔐 Login Padrão
+- Email: `admin@agromonitor.pro`
+- Senha: `admin123`
 
-Após executar o seed:
-- **Email**: admin@agromonitor.pro
-- **Senha**: admin123
+## Problemas comuns
 
-## 🐳 Docker (Alternativa)
+Se cadastro, edicao e exclusao nao salvarem de verdade:
 
-Se preferir usar Docker:
+- confira se `DATABASE_URL` esta usando `mysql://`
+- confira se o banco MySQL aceita conexao do app
+- rode `npm run prisma:migrate:prod`
+- rode `npm run seed` para criar o usuario inicial
 
-```bash
-# Desenvolvimento
-docker-compose up -d
-
-# Produção
-docker-compose --profile production up -d
-```
-
-## 🚀 Deploy na Hostinger
-
-```bash
-chmod +x scripts/deploy-hostinger.sh
-./scripts/deploy-hostinger.sh
-```
-
-## 📋 Comandos Úteis
-
-```bash
-# Ver status do banco
-npm run prisma:studio
-
-# Resetar banco de dados
-npx prisma migrate reset
-
-# Ver logs
-pm2 logs agromonitor-api
-
-# Reiniciar aplicação
-pm2 restart agromonitor-api
-```
-
-## 🆘 Problemas Comuns
-
-### Erro de conexão com PostgreSQL
-- Verifique se o PostgreSQL está rodando
-- Confirme as credenciais no .env
-- Verifique se o banco de dados foi criado
-
-### Erro de porta em uso
-- Altere a porta no .env (PORT=3001)
-- Ou pare o processo que está usando a porta
-
-### Erro ao gerar Prisma Client
-```bash
-cd server
-npx prisma generate
-```
-
-## 📞 Suporte
-
-- Documentação completa: README.md
-- API Docs: http://localhost:3001/api/docs
-- Email: support@agromonitor.pro
-
----
-
-**Desenvolvido com ❤️ para o agronegócio brasileiro**
+Se o site abrir mas entrar em modo demonstracao, significa que a API ou o banco ainda nao responderam.

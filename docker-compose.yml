@@ -1,23 +1,24 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:16-alpine
+  # MySQL Database
+  mysql:
+    image: mysql:8.4
     container_name: agromonitor-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER:-agromonitor}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-agromonitor123}
-      POSTGRES_DB: ${DB_NAME:-agromonitor_pro}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_agromonitor123}
+      MYSQL_USER: ${DB_USER:-agromonitor}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-agromonitor123}
+      MYSQL_DATABASE: ${DB_NAME:-agromonitor_pro}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     ports:
-      - "5432:5432"
+      - "3306:3306"
     networks:
       - agromonitor-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-agromonitor}"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u${DB_USER:-agromonitor} -p${DB_PASSWORD:-agromonitor123}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,7 +33,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      DATABASE_URL: postgresql://${DB_USER:-agromonitor}:${DB_PASSWORD:-agromonitor123}@postgres:5432/${DB_NAME:-agromonitor_pro}?schema=public
+      DATABASE_URL: mysql://${DB_USER:-agromonitor}:${DB_PASSWORD:-agromonitor123}@mysql:3306/${DB_NAME:-agromonitor_pro}
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
@@ -43,7 +44,7 @@ services:
     ports:
       - "3001:3001"
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
     networks:
       - agromonitor-network
@@ -85,7 +86,7 @@ services:
       - production
 
 volumes:
-  postgres_data:
+  mysql_data:
 
 networks:
   agromonitor-network:

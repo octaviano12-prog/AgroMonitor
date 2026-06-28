@@ -31,7 +31,7 @@
     "nodejs",
     "express",
     "prisma",
-    "postgresql"
+    "mysql"
   ],
   "author": "AgroMonitor Pro",
   "license": "MIT",
