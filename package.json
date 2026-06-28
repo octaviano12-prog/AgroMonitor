@@ -1,0 +1,42 @@
+{
+  "name": "agromonitor-pro-root",
+  "version": "1.0.0",
+  "description": "Sistema profissional de monitoramento operacional agrícola",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "dev": "npm run dev:server & npm run dev:client",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "npm run build --workspace=server",
+    "build:client": "npm run build --workspace=client",
+    "start": "npm run start --workspace=server",
+    "prisma:generate": "npm run prisma:generate --workspace=server",
+    "prisma:migrate": "npm run prisma:migrate --workspace=server",
+    "prisma:migrate:prod": "npm run prisma:migrate:prod --workspace=server",
+    "prisma:studio": "npm run prisma:studio --workspace=server",
+    "seed": "npm run seed --workspace=server",
+    "test": "npm run test --workspace=server",
+    "lint": "npm run lint --workspace=server && npm run lint --workspace=client"
+  },
+  "keywords": [
+    "agriculture",
+    "monitoring",
+    "saas",
+    "nodejs",
+    "express",
+    "prisma",
+    "postgresql"
+  ],
+  "author": "AgroMonitor Pro",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

@@ -1,0 +1,413 @@
+// Prisma Schema for AgroMonitor Pro
+// PostgreSQL database with full relational mapping
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum UserRole {
+  ADMIN
+  SUPERVISOR
+  MONITOR
+  OPERATOR
+  VISITOR
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum EquipmentStatus {
+  ONLINE
+  OFFLINE
+  WORKING
+  MAINTENANCE
+}
+
+enum OperatorShift {
+  DAY
+  NIGHT
+  ROTATING
+}
+
+enum FrontStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+
+enum PlotStatus {
+  CULTIVATION
+  HARVEST
+  PREPARATION
+  FALLOW
+}
+
+enum NotificationType {
+  ALERT
+  INFO
+  WARNING
+  SUCCESS
+}
+
+enum TimelineEventType {
+  START
+  MOVE
+  WORK
+  STOP
+  ALERT
+  END
+}
+
+enum ReportFormat {
+  PDF
+  EXCEL
+  CSV
+  WORD
+}
+
+enum ReportStatus {
+  READY
+  GENERATING
+  FAILED
+}
+
+// ============================================
+// USERS & AUTH
+// ============================================
+
+model User {
+  id             String     @id @default(uuid())
+  name           String
+  email          String     @unique
+  password       String
+  phone          String?
+  role           UserRole   @default(OPERATOR)
+  status         UserStatus @default(ACTIVE)
+  avatar         String?
+  refreshToken   String?
+  lastLogin      DateTime?
+  twoFactorEnabled Boolean  @default(false)
+  twoFactorSecret  String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  deletedAt      DateTime?
+
+  // Relations
+  notifications  Notification[]
+  reports        Report[]
+  operator       Operator?
+  auditLogs      AuditLog[]
+
+  @@index([email])
+  @@index([role])
+  @@index([status])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+}
+
+// ============================================
+// FARM MANAGEMENT
+// ============================================
+
+model Farm {
+  id            String   @id @default(uuid())
+  name          String
+  city          String
+  state         String
+  area          Float
+  responsible   String
+  latitude      Float?
+  longitude     Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  plots         Plot[]
+  equipments    Equipment[]
+
+  @@index([name])
+  @@index([city, state])
+}
+
+model Plot {
+  id        String     @id @default(uuid())
+  name      String
+  code      String
+  area      Float
+  crop      String
+  status    PlotStatus @default(FALLOW)
+  farmId    String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+
+  // Relations
+  farm        Farm       @relation(fields: [farmId], references: [id])
+  equipments  Equipment[]
+
+  @@index([code])
+  @@index([farmId])
+  @@unique([code, farmId])
+}
+
+// ============================================
+// EQUIPMENT & OPERATIONS
+// ============================================
+
+model Front {
+  id           String     @id @default(uuid())
+  name         String
+  supervisor   String
+  area         Float      @default(0)
+  status       FrontStatus @default(ACTIVE)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deletedAt    DateTime?
+
+  // Relations
+  equipments   Equipment[]
+
+  @@index([name])
+}
+
+model Equipment {
+  id            String          @id @default(uuid())
+  fleet         String          @unique
+  model         String
+  brand         String
+  year          Int
+  hourMeter     Float           @default(0)
+  plate         String?
+  type          String
+  status        EquipmentStatus @default(OFFLINE)
+  speed         Float           @default(0)
+  latitude      Float?
+  longitude     Float?
+  lastUpdate    DateTime?
+  photo         String?
+  availability  Float           @default(0)
+  efficiency    Float           @default(0)
+  
+  // Foreign Keys
+  operatorId    String?
+  frontId       String?
+  farmId        String?
+  plotId        String?
+  
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  operator      Operator?       @relation(fields: [operatorId], references: [id])
+  front         Front?          @relation(fields: [frontId], references: [id])
+  farm          Farm?           @relation(fields: [farmId], references: [id])
+  plot          Plot?           @relation(fields: [plotId], references: [id])
+  timeline      TimelineEvent[]
+  documents     EquipmentDocument[]
+
+  @@index([fleet])
+  @@index([status])
+  @@index([operatorId])
+  @@index([frontId])
+}
+
+model EquipmentDocument {
+  id          String   @id @default(uuid())
+  name        String
+  url         String
+  type        String
+  equipmentId String
+  createdAt   DateTime @default(now())
+
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+
+  @@index([equipmentId])
+}
+
+// ============================================
+// OPERATORS
+// ============================================
+
+model Operator {
+  id            String        @id @default(uuid())
+  name          String
+  cpf           String        @unique
+  phone         String?
+  email         String?
+  registration  String        @unique
+  role          String
+  shift         OperatorShift @default(DAY)
+  supervisor    String
+  photo         String?
+  rating        Float         @default(0)
+  hoursWorked   Float         @default(0)
+  userId        String?       @unique
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  user          User?         @relation(fields: [userId], references: [id])
+  equipments    Equipment[]
+
+  @@index([cpf])
+  @@index([registration])
+  @@index([name])
+}
+
+// ============================================
+// TIMELINE & TRACKING
+// ============================================
+
+model TimelineEvent {
+  id            String            @id @default(uuid())
+  time          String
+  type          TimelineEventType
+  description   String
+  details       Json
+  status        String
+  equipmentId   String
+  createdAt     DateTime          @default(now())
+
+  equipment     Equipment         @relation(fields: [equipmentId], references: [id])
+
+  @@index([equipmentId])
+  @@index([time])
+}
+
+// ============================================
+// CSV IMPORTS
+// ============================================
+
+model CsvImport {
+  id          String   @id @default(uuid())
+  fileName    String
+  filePath    String
+  totalRows   Int      @default(0)
+  processedRows Int    @default(0)
+  status      String   @default("pending")
+  columnMapping Json?
+  errors      Json?
+  uploadedBy  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([uploadedBy])
+}
+
+// ============================================
+// NOTIFICATIONS
+// ============================================
+
+model Notification {
+  id        String           @id @default(uuid())
+  title     String
+  message   String
+  type      NotificationType @default(INFO)
+  read      Boolean          @default(false)
+  userId    String
+  createdAt DateTime         @default(now())
+
+  user      User             @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt])
+}
+
+// ============================================
+// REPORTS
+// ============================================
+
+model Report {
+  id          String       @id @default(uuid())
+  name        String
+  type        String
+  format      ReportFormat
+  status      ReportStatus @default(GENERATING)
+  filePath    String?
+  dateRange   Json?
+  filters     Json?
+  scheduledAt DateTime?
+  frequency   String?
+  recipients  Json?
+  generatedBy String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  user        User         @relation(fields: [generatedBy], references: [id])
+
+  @@index([type])
+  @@index([status])
+  @@index([generatedBy])
+}
+
+// ============================================
+// AUDIT & LOGS
+// ============================================
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  entity    String
+  entityId  String?
+  changes   Json?
+  userId    String
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// ============================================
+// OCCURRENCES / INCIDENTS
+// ============================================
+
+model Occurrence {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  type        String
+  status      String    @default("open")
+  priority    String    @default("medium")
+  assignedTo  String?
+  comments    Json?
+  photos      Json?
+  resolvedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status])
+  @@index([type])
+  @@index([priority])
+}

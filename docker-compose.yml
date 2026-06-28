@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: agromonitor-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-agromonitor}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-agromonitor123}
+      POSTGRES_DB: ${DB_NAME:-agromonitor_pro}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - agromonitor-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-agromonitor}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API Server
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agromonitor-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://${DB_USER:-agromonitor}:${DB_PASSWORD:-agromonitor123}@postgres:5432/${DB_NAME:-agromonitor_pro}?schema=public
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - agromonitor-network
+
+  # Client (Frontend)
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: agromonitor-client
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+      NEXT_PUBLIC_SOCKET_URL: ${NEXT_PUBLIC_SOCKET_URL:-http://localhost:3001}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - agromonitor-network
+
+  # Nginx Reverse Proxy (Production)
+  nginx:
+    image: nginx:alpine
+    container_name: agromonitor-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+      - client
+    networks:
+      - agromonitor-network
+    profiles:
+      - production
+
+volumes:
+  postgres_data:
+
+networks:
+  agromonitor-network:
+    driver: bridge
