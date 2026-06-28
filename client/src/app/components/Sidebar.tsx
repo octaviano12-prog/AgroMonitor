@@ -22,29 +22,29 @@ export default function Sidebar({ currentPage, onNavigate, open }: { currentPage
 
   return (
     <motion.aside initial={{ x: -260 }} animate={{ x: 0 }} transition={{ type: "spring", damping: 30, stiffness: 300 }}
-      className="w-[260px] h-screen flex flex-col border-r border-[var(--color-border-main)] bg-[var(--color-bg-secondary)] shrink-0 relative overflow-hidden">
+      className="w-[280px] h-screen flex flex-col border-r border-[var(--color-border-main)] bg-[var(--color-bg-secondary)] shrink-0 relative overflow-hidden">
       {/* Subtle gradient overlay */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[var(--color-accent)]/[0.02] to-transparent pointer-events-none" />
       
       {/* Logo */}
-      <div className="h-16 flex items-center gap-3 px-5 border-b border-[var(--color-border-main)] relative z-10">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--color-accent)] to-emerald-600 flex items-center justify-center shadow-lg shadow-[var(--color-accent)]/20">
+      <div className="h-[72px] flex items-center gap-3 px-5 py-5 border-b border-[var(--color-border-main)] relative z-10">
+        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--color-accent)] to-emerald-600 flex items-center justify-center shadow-lg shadow-[var(--color-accent)]/20">
           <Tractor size={18} className="text-white" />
         </div>
         <div>
-          <div className="text-sm font-bold leading-none tracking-tight">AgroMonitor</div>
+          <div className="text-base font-bold leading-none tracking-tight">AgroMonitor</div>
           <span className="text-[9px] font-mono tracking-[0.2em] text-[var(--color-accent)] uppercase font-semibold">Professional</span>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 px-3 overflow-y-auto space-y-0.5 relative z-10">
+      <nav className="flex-1 py-5 px-3 overflow-y-auto space-y-1 relative z-10">
         {navItems.map((item, idx) => {
           const active = currentPage === item.id;
           return (
             <motion.button key={item.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.03 }}
               onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] transition-all duration-200 group relative
+              className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-all duration-200 group relative
                 ${active ? "text-[var(--color-accent)] font-semibold" : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"}`}
               style={active ? { background: 'rgba(16,185,129,0.08)' } : {}}>
               {active && (

@@ -19,17 +19,17 @@ export default function Header({ onToggleSidebar, onNavigate }: { onToggleSideba
   }, []);
 
   return (
-    <header className="h-14 border-b border-[var(--color-border-main)] bg-[var(--color-bg-secondary)]/80 backdrop-blur-xl flex items-center px-5 gap-4 shrink-0 relative z-20">
+    <header className="h-16 border-b border-[var(--color-border-main)] bg-[var(--color-bg-secondary)]/80 backdrop-blur-xl flex items-center px-6 gap-4 shrink-0 relative z-20">
       <button onClick={onToggleSidebar} className="text-[var(--color-text-dim)] hover:text-[var(--color-text-muted)] transition-colors p-1">
         <Menu size={18} />
       </button>
 
       {/* Search */}
       <div className="flex-1 flex items-center gap-4">
-        <div className={`flex items-center gap-2.5 px-3.5 py-2 rounded-xl border transition-all duration-300 ${searchOpen ? "border-[var(--color-accent)]/40 bg-[var(--color-bg-card)] shadow-lg shadow-[var(--color-accent)]/5 w-80" : "border-[var(--color-border-main)] bg-[var(--color-bg-input)] w-64"}`}>
+        <div className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg border transition-all duration-300 ${searchOpen ? "border-[var(--color-accent)]/40 bg-[var(--color-bg-card)] shadow-lg shadow-[var(--color-accent)]/5 w-96" : "border-[var(--color-border-main)] bg-[var(--color-bg-input)] w-72"}`}>
           <Search size={14} className="text-[var(--color-text-dim)]" />
           <input type="text" placeholder="Buscar..." onFocus={() => setSearchOpen(true)} onBlur={() => setSearchOpen(false)}
-            className="bg-transparent text-[13px] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-dim)] outline-none w-full" />
+            className="bg-transparent text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-dim)] outline-none w-full" />
           <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-[var(--color-bg-hover)] border border-[var(--color-border-main)]">
             <Command size={9} className="text-[var(--color-text-dim)]" />
             <span className="text-[9px] text-[var(--color-text-dim)] font-mono font-semibold">K</span>
@@ -45,10 +45,10 @@ export default function Header({ onToggleSidebar, onNavigate }: { onToggleSideba
           <span className="text-[11px] font-mono font-medium text-[var(--color-text-muted)]">{time}</span>
         </div>
 
-        <button onClick={() => setDark(!dark)} className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--color-text-dim)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-muted)] transition-colors">
+        <button onClick={() => setDark(!dark)} className="w-9 h-9 rounded-lg flex items-center justify-center text-[var(--color-text-dim)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-muted)] transition-colors">
           {dark ? <Sun size={15} /> : <Moon size={15} />}
         </button>
-        <button onClick={() => onNavigate("notifications")} className="relative w-8 h-8 rounded-lg flex items-center justify-center text-[var(--color-text-dim)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-muted)] transition-colors">
+        <button onClick={() => onNavigate("notifications")} className="relative w-9 h-9 rounded-lg flex items-center justify-center text-[var(--color-text-dim)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-muted)] transition-colors">
           <Bell size={15} />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[var(--color-danger)] ring-2 ring-[var(--color-bg-secondary)]" />
         </button>

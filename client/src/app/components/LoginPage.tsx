@@ -2,11 +2,32 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Tractor, Shield, ArrowRight } from "lucide-react";
+import { api } from "@/lib/api";
 
 export default function LoginPage({ onLogin }: { onLogin: () => void }) {
   const [showPass, setShowPass] = useState(false);
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await api.post("/api/auth/login", { email, password: pass });
+      localStorage.setItem("token", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+      localStorage.removeItem("demoMode");
+      onLogin();
+    } catch {
+      localStorage.setItem("demoMode", "true");
+      setError("API ou banco indisponivel. Entrando em modo demonstracao com salvamento local.");
+      onLogin();
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="h-screen w-screen flex bg-[var(--color-bg-primary)] relative overflow-hidden noise-overlay">
@@ -77,7 +98,7 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
             <p className="text-[var(--color-text-muted)] mt-2 text-sm">Entre com suas credenciais para acessar o painel</p>
           </div>
 
-          <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); onLogin(); }}>
+          <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
             <div>
               <label className="text-[11px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-2 block">Email</label>
               <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="seu@email.com"
@@ -100,8 +121,9 @@ export default function LoginPage({ onLogin }: { onLogin: () => void }) {
               </label>
               <button type="button" className="text-xs text-[var(--color-accent)] hover:text-[var(--color-accent-bright)] transition-colors font-medium">Esqueceu a senha?</button>
             </div>
-            <button type="submit" className="btn-primary w-full py-3.5 rounded-xl flex items-center justify-center gap-2 group">
-              <span>Entrar no Painel</span>
+            {error && <p className="text-xs text-[var(--color-amber)] leading-relaxed">{error}</p>}
+            <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 rounded-xl flex items-center justify-center gap-2 group disabled:opacity-60">
+              <span>{loading ? "Entrando..." : "Entrar no Painel"}</span>
               <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
             </button>
           </form>
