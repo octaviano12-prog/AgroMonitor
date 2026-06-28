@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import swaggerUi from 'swagger-ui-express';
@@ -56,6 +57,9 @@ app.use(rateLimiter);
 // Static files
 app.use('/uploads', express.static('uploads'));
 
+const clientOutPath = path.resolve(__dirname, '../../client/out');
+app.use(express.static(clientOutPath));
+
 // Swagger
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -79,6 +83,16 @@ app.use('/api/reports', authMiddleware, reportRoutes);
 app.use('/api/notifications', authMiddleware, notificationRoutes);
 app.use('/api/dashboard', authMiddleware, dashboardRoutes);
 app.use('/api/users', authMiddleware, userRoutes);
+
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ error: 'API route not found' });
+  }
+
+  res.sendFile(path.join(clientOutPath, 'index.html'), (error) => {
+    if (error) next(error);
+  });
+});
 
 // Error handling
 app.use(errorHandler);
