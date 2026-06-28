@@ -46,14 +46,14 @@ export default function CSVUpload() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5 max-w-[1200px] mx-auto">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 w-full">
       <div>
-        <h1 className="text-[22px] font-bold tracking-tight">Upload Inteligente de Dados</h1>
-        <p className="text-[12px] text-[var(--color-text-dim)] mt-1">Processamento automático de arquivos CSV, Excel e TXT do SGPA</p>
+        <h1 className="text-3xl font-black tracking-tight">Upload Inteligente de Dados</h1>
+        <p className="text-base text-[var(--color-text-secondary)] mt-1">Processamento automatico de arquivos CSV, Excel e TXT do SGPA</p>
       </div>
 
       {/* Step indicator */}
-      <div className="glass-card p-4">
+      <div className="glass-card p-5">
         <div className="flex items-center gap-2">
           {steps.map((s, i) => (
             <div key={s} className="flex items-center gap-2 flex-1">
@@ -71,7 +71,7 @@ export default function CSVUpload() {
       <AnimatePresence mode="wait">
         {step === 0 && (
           <motion.div key="upload" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-            className="glass-card p-10 text-center">
+            className="glass-card p-12 text-center">
             <div onDragOver={(e) => e.preventDefault()} onDrop={handleDrop}
               className="border-2 border-dashed border-[var(--color-border-bright)] rounded-2xl p-12 hover:border-[var(--color-accent)]/50 transition-all cursor-pointer group"
               onClick={() => { setFile("SGPA_apontamentos_jun2024.csv"); setTimeout(() => setStep(1), 500); }}>

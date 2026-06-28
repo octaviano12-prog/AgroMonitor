@@ -70,7 +70,7 @@ export default function AIAssistant() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full flex flex-col max-w-[1000px] mx-auto">
       <div className="mb-4">
-        <h1 className="text-[22px] font-bold tracking-tight flex items-center gap-2">
+        <h1 className="text-3xl font-black tracking-tight flex items-center gap-2">
           <Sparkles size={22} className="text-[var(--color-accent)]" />
           Agro IA
         </h1>

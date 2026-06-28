@@ -1,66 +1,81 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Menu, Search, Bell, Moon, Sun, ChevronDown, Command } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Bell, CalendarDays, ChevronDown, Menu, Search, SlidersHorizontal, Sun } from "lucide-react";
 import type { PageId } from "./AppShell";
 
-export default function Header({ onToggleSidebar, onNavigate }: { onToggleSidebar: () => void; onNavigate: (p: PageId) => void }) {
-  const [dark, setDark] = useState(true);
-  const [searchOpen, setSearchOpen] = useState(false);
+export default function Header({
+  onToggleSidebar,
+  onNavigate,
+}: {
+  onToggleSidebar: () => void;
+  onNavigate: (p: PageId) => void;
+}) {
   const [time, setTime] = useState("");
 
   useEffect(() => {
-    const update = () => {
-      const now = new Date();
-      setTime(now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }));
-    };
+    const update = () => setTime(new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }));
     update();
     const iv = setInterval(update, 1000);
     return () => clearInterval(iv);
   }, []);
 
   return (
-    <header className="h-16 border-b border-[var(--color-border-main)] bg-[var(--color-bg-secondary)]/80 backdrop-blur-xl flex items-center px-6 gap-4 shrink-0 relative z-20">
-      <button onClick={onToggleSidebar} className="text-[var(--color-text-dim)] hover:text-[var(--color-text-muted)] transition-colors p-1">
-        <Menu size={18} />
+    <header className="h-[76px] shrink-0 border-b border-[var(--color-border-main)] bg-[#050b14]/92 backdrop-blur-xl flex items-center gap-5 px-7 relative z-20">
+      <button
+        onClick={onToggleSidebar}
+        className="h-11 w-11 rounded-lg flex items-center justify-center text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white transition-colors"
+        title="Alternar menu"
+      >
+        <Menu size={24} />
       </button>
 
-      {/* Search */}
-      <div className="flex-1 flex items-center gap-4">
-        <div className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg border transition-all duration-300 ${searchOpen ? "border-[var(--color-accent)]/40 bg-[var(--color-bg-card)] shadow-lg shadow-[var(--color-accent)]/5 w-96" : "border-[var(--color-border-main)] bg-[var(--color-bg-input)] w-72"}`}>
-          <Search size={14} className="text-[var(--color-text-dim)]" />
-          <input type="text" placeholder="Buscar..." onFocus={() => setSearchOpen(true)} onBlur={() => setSearchOpen(false)}
-            className="bg-transparent text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-dim)] outline-none w-full" />
-          <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-[var(--color-bg-hover)] border border-[var(--color-border-main)]">
-            <Command size={9} className="text-[var(--color-text-dim)]" />
-            <span className="text-[9px] text-[var(--color-text-dim)] font-mono font-semibold">K</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Right side */}
-      <div className="flex items-center gap-2">
-        {/* Live clock */}
-        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--color-bg-input)] border border-[var(--color-border-main)]">
-          <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] animate-pulse" />
-          <span className="text-[11px] font-mono font-medium text-[var(--color-text-muted)]">{time}</span>
+      <div className="flex-1 flex items-center justify-end gap-4">
+        <div className="hidden lg:flex w-[430px] h-12 items-center gap-3 rounded-lg border border-[var(--color-border-bright)] bg-[var(--color-bg-input)] px-4">
+          <Search size={18} className="text-[var(--color-text-muted)]" />
+          <input
+            type="text"
+            placeholder="Buscar equipamentos, operadores..."
+            className="w-full bg-transparent text-sm text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)]"
+          />
         </div>
 
-        <button onClick={() => setDark(!dark)} className="w-9 h-9 rounded-lg flex items-center justify-center text-[var(--color-text-dim)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-muted)] transition-colors">
-          {dark ? <Sun size={15} /> : <Moon size={15} />}
-        </button>
-        <button onClick={() => onNavigate("notifications")} className="relative w-9 h-9 rounded-lg flex items-center justify-center text-[var(--color-text-dim)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-text-muted)] transition-colors">
-          <Bell size={15} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[var(--color-danger)] ring-2 ring-[var(--color-bg-secondary)]" />
+        <button className="hidden md:flex h-12 items-center gap-3 rounded-lg border border-[var(--color-border-bright)] bg-[var(--color-bg-input)] px-4 text-sm font-bold">
+          24/05/2024
+          <CalendarDays size={17} className="text-[var(--color-text-secondary)]" />
         </button>
 
-        <div className="flex items-center gap-2.5 pl-3 ml-1 border-l border-[var(--color-border-main)] cursor-pointer group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-accent)]/20 to-[var(--color-blue)]/20 flex items-center justify-center text-[11px] font-bold text-[var(--color-accent)] border border-[var(--color-accent)]/10">
-            AP
+        <button className="hidden xl:flex h-12 items-center gap-3 rounded-lg bg-emerald-600 px-4 text-sm font-bold text-white">
+          <SlidersHorizontal size={17} />
+          Filtros
+          <ChevronDown size={15} />
+        </button>
+
+        <div className="hidden md:flex items-center gap-2 rounded-lg border border-[var(--color-border-main)] bg-[var(--color-bg-input)] px-3 py-2">
+          <span className="h-2 w-2 rounded-full bg-[var(--color-accent)]" />
+          <span className="text-xs font-mono text-[var(--color-text-secondary)]">{time}</span>
+        </div>
+
+        <button className="h-11 w-11 rounded-lg flex items-center justify-center text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white transition-colors">
+          <Sun size={20} />
+        </button>
+
+        <button
+          onClick={() => onNavigate("notifications")}
+          className="relative h-11 w-11 rounded-lg flex items-center justify-center text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white transition-colors"
+        >
+          <Bell size={20} />
+          <span className="absolute right-2 top-2 rounded-full bg-emerald-500 px-1.5 text-[10px] font-black text-white">12</span>
+        </button>
+
+        <div className="flex items-center gap-3 pl-4 border-l border-[var(--color-border-main)]">
+          <div className="h-11 w-11 rounded-full bg-gradient-to-br from-amber-200 to-orange-600 flex items-center justify-center text-sm font-black text-slate-950">
+            VT
           </div>
-          <div className="hidden md:block">
-            <div className="text-[12px] font-semibold text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)] transition-colors">Antônio</div>
+          <div className="hidden md:block leading-tight">
+            <div className="text-sm font-bold">Vagner Tavares</div>
+            <div className="text-xs text-[var(--color-text-secondary)]">Administrador</div>
           </div>
-          <ChevronDown size={11} className="text-[var(--color-text-dim)]" />
+          <ChevronDown size={16} className="text-[var(--color-text-secondary)]" />
         </div>
       </div>
     </header>

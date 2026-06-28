@@ -16,10 +16,10 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5 max-w-[1200px] mx-auto">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 w-full">
       <div>
-        <h1 className="text-[22px] font-bold tracking-tight">Configurações</h1>
-        <p className="text-[12px] text-[var(--color-text-dim)] mt-1">Gerencie seu perfil, segurança e preferências</p>
+        <h1 className="text-3xl font-black tracking-tight">Configuracoes</h1>
+        <p className="text-base text-[var(--color-text-secondary)] mt-1">Gerencie seu perfil, seguranca e preferencias</p>
       </div>
 
       <div className="flex gap-6">

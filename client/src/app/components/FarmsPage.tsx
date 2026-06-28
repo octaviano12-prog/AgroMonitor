@@ -127,8 +127,8 @@ export default function FarmsPage() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 w-full">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-[28px] font-bold tracking-tight">Fazendas & Talhoes</h1>
-          <p className="text-sm text-[var(--color-text-secondary)] mt-1">
+          <h1 className="text-3xl font-black tracking-tight">Fazendas & Talhoes</h1>
+          <p className="text-base text-[var(--color-text-secondary)] mt-1">
             {items.length} fazendas - {totals.plots} talhoes {source === "local" && "(modo local)"}
           </p>
         </div>
@@ -143,7 +143,7 @@ export default function FarmsPage() {
           { label: "Fazendas Ativas", value: items.length.toString(), icon: TreePine, color: "var(--color-blue)" },
           { label: "Talhoes em Operacao", value: totals.activePlots.toString(), icon: MapPin, color: "var(--color-amber)" },
         ].map((summary, index) => (
-          <motion.div key={summary.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="glass-card glass-card-hover p-6">
+          <motion.div key={summary.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="glass-card glass-card-hover p-6 min-h-[132px]">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ background: `${summary.color}12` }}>
                 <summary.icon size={22} style={{ color: summary.color }} />
@@ -157,7 +157,7 @@ export default function FarmsPage() {
         ))}
       </div>
 
-      <div className="glass-card p-4 flex items-center gap-3">
+      <div className="glass-card p-5 flex items-center gap-3">
         <Search size={16} className="text-[var(--color-text-dim)]" />
         <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar por fazenda, cidade ou responsavel..."
           className="w-full bg-transparent outline-none text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-dim)]" />

@@ -22,11 +22,11 @@ export default function ReportsPage() {
   const [tab, setTab] = useState<"reports" | "generate" | "scheduled">("reports");
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5 max-w-[1400px] mx-auto">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 w-full">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[22px] font-bold tracking-tight">Relatórios</h1>
-          <p className="text-[12px] text-[var(--color-text-dim)] mt-1">Gere, visualize e agende relatórios operacionais</p>
+          <h1 className="text-3xl font-black tracking-tight">Relatorios</h1>
+          <p className="text-base text-[var(--color-text-secondary)] mt-1">Gere, visualize e agende relatorios operacionais</p>
         </div>
         <button className="btn-primary flex items-center gap-2"><FileText size={15} /> Novo Relatório</button>
       </div>

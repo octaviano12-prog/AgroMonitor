@@ -1,6 +1,23 @@
 "use client";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Tractor, Users, TreePine, Upload, Clock, Map, BrainCircuit, FileText, Bell, Settings, LogOut, ChevronLeft, Sparkles } from "lucide-react";
+import {
+  BarChart3,
+  Bell,
+  BrainCircuit,
+  Clock,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Map,
+  MapPin,
+  Settings,
+  ShieldCheck,
+  Tractor,
+  TreePine,
+  Upload,
+  Users,
+  Wrench,
+} from "lucide-react";
 import type { PageId } from "./AppShell";
 
 const navItems: { id: PageId; icon: React.ElementType; label: string; badge?: number }[] = [
@@ -8,72 +25,117 @@ const navItems: { id: PageId; icon: React.ElementType; label: string; badge?: nu
   { id: "equipment", icon: Tractor, label: "Equipamentos" },
   { id: "operators", icon: Users, label: "Operadores" },
   { id: "farms", icon: TreePine, label: "Fazendas" },
-  { id: "csv", icon: Upload, label: "Upload CSV", badge: 3 },
-  { id: "timeline", icon: Clock, label: "Linha do Tempo" },
+  { id: "csv", icon: Upload, label: "CSV / SGPA" },
+  { id: "timeline", icon: Clock, label: "Monitoramento" },
   { id: "map", icon: Map, label: "Mapa" },
   { id: "ai", icon: BrainCircuit, label: "Agro IA" },
-  { id: "reports", icon: FileText, label: "Relatórios" },
-  { id: "notifications", icon: Bell, label: "Notificações", badge: 3 },
-  { id: "settings", icon: Settings, label: "Configurações" },
+  { id: "reports", icon: FileText, label: "Relatorios" },
+  { id: "notifications", icon: Bell, label: "Ocorrencias", badge: 5 },
+  { id: "settings", icon: Settings, label: "Configuracoes" },
 ];
 
-export default function Sidebar({ currentPage, onNavigate, open }: { currentPage: PageId; onNavigate: (p: PageId) => void; open: boolean }) {
+const secondaryItems = [
+  { icon: BarChart3, label: "Indicadores" },
+  { icon: MapPin, label: "Talhoes" },
+  { icon: Bell, label: "Alertas", badge: 8 },
+  { icon: Wrench, label: "Manutencoes" },
+];
+
+export default function Sidebar({
+  currentPage,
+  onNavigate,
+  open,
+}: {
+  currentPage: PageId;
+  onNavigate: (p: PageId) => void;
+  open: boolean;
+}) {
   if (!open) return null;
 
   return (
-    <motion.aside initial={{ x: -260 }} animate={{ x: 0 }} transition={{ type: "spring", damping: 30, stiffness: 300 }}
-      className="w-[280px] h-screen flex flex-col border-r border-[var(--color-border-main)] bg-[var(--color-bg-secondary)] shrink-0 relative overflow-hidden">
-      {/* Subtle gradient overlay */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[var(--color-accent)]/[0.02] to-transparent pointer-events-none" />
-      
-      {/* Logo */}
-      <div className="h-[72px] flex items-center gap-3 px-5 py-5 border-b border-[var(--color-border-main)] relative z-10">
-        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--color-accent)] to-emerald-600 flex items-center justify-center shadow-lg shadow-[var(--color-accent)]/20">
-          <Tractor size={18} className="text-white" />
+    <motion.aside
+      initial={{ x: -320 }}
+      animate={{ x: 0 }}
+      transition={{ type: "spring", damping: 30, stiffness: 300 }}
+      className="w-[320px] h-screen shrink-0 overflow-hidden border-r border-[var(--color-border-main)] bg-[#050b14] relative flex flex-col"
+    >
+      <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-emerald-500/10 to-transparent pointer-events-none" />
+
+      <div className="relative z-10 h-[92px] px-7 flex items-center gap-4 border-b border-[var(--color-border-main)]">
+        <div className="w-[52px] h-[52px] rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+          <Tractor size={25} className="text-white" />
         </div>
         <div>
-          <div className="text-base font-bold leading-none tracking-tight">AgroMonitor</div>
-          <span className="text-[9px] font-mono tracking-[0.2em] text-[var(--color-accent)] uppercase font-semibold">Professional</span>
+          <div className="text-2xl font-black leading-none tracking-tight">
+            AGRO<span className="text-white/80">MONITOR</span>
+          </div>
+          <div className="mt-1 text-[11px] font-black tracking-[0.28em] text-[var(--color-accent)]">PRO</div>
         </div>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 py-5 px-3 overflow-y-auto space-y-1 relative z-10">
-        {navItems.map((item, idx) => {
+      <nav className="relative z-10 flex-1 overflow-y-auto px-4 py-5 space-y-1.5">
+        {navItems.map((item, index) => {
           const active = currentPage === item.id;
           return (
-            <motion.button key={item.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.03 }}
+            <motion.button
+              key={item.id}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.025 }}
               onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-all duration-200 group relative
-                ${active ? "text-[var(--color-accent)] font-semibold" : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"}`}
-              style={active ? { background: 'rgba(16,185,129,0.08)' } : {}}>
-              {active && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-[var(--color-accent)]" />
-              )}
-              <item.icon size={17} className={active ? "text-[var(--color-accent)]" : "text-[var(--color-text-dim)] group-hover:text-[var(--color-text-muted)] transition-colors"} />
+              className={`relative w-full flex items-center gap-4 rounded-lg px-5 py-4 text-[15px] transition-colors ${
+                active ? "text-white font-bold" : "text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white"
+              }`}
+              style={active ? { background: "linear-gradient(90deg, rgba(34,197,94,0.24), rgba(34,197,94,0.06))" } : undefined}
+            >
+              {active ? <span className="absolute left-0 top-1/2 h-9 w-1 -translate-y-1/2 rounded-r-full bg-[var(--color-accent)]" /> : null}
+              <item.icon size={22} className={active ? "text-[var(--color-accent)]" : "text-[var(--color-text-secondary)]"} />
               <span className="flex-1 text-left">{item.label}</span>
-              {item.badge && (
-                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${active ? "bg-[var(--color-accent)] text-white" : "bg-[var(--color-accent)]/15 text-[var(--color-accent)]"}`}>
-                  {item.badge}
-                </span>
-              )}
+              {item.badge ? (
+                <span className="rounded-md bg-red-500 px-2 py-0.5 text-xs font-black text-white">{item.badge}</span>
+              ) : null}
             </motion.button>
           );
         })}
+
+        <div className="mt-3 border-t border-[var(--color-border-main)] pt-3 space-y-1.5">
+          {secondaryItems.map((item) => (
+            <button
+              key={item.label}
+              className="w-full flex items-center gap-4 rounded-lg px-5 py-4 text-[15px] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white transition-colors"
+            >
+              <item.icon size={22} />
+              <span className="flex-1 text-left">{item.label}</span>
+              {"badge" in item && item.badge ? (
+                <span className="rounded-md bg-yellow-400 px-2 py-0.5 text-xs font-black text-black">{item.badge}</span>
+              ) : null}
+            </button>
+          ))}
+        </div>
       </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-[var(--color-border-main)] relative z-10">
-        <div className="flex items-center gap-3 mb-3 px-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--color-accent)]/20 to-[var(--color-blue)]/20 flex items-center justify-center text-xs font-bold text-[var(--color-accent)] border border-[var(--color-accent)]/10">
-            AP
+      <div className="relative z-10 border-t border-[var(--color-border-main)] p-5">
+        <div className="glass-card p-4 mb-4">
+          <div className="mb-3 flex items-center justify-between">
+            <div className="text-sm font-bold">Status do Sistema</div>
+            <ShieldCheck size={17} className="text-[var(--color-accent)]" />
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-xs font-semibold truncate">Antônio Pereira</div>
-            <div className="text-[10px] text-[var(--color-text-dim)]">Administrador</div>
+          <div className="flex items-center gap-2 text-xs text-[var(--color-text-secondary)]">
+            <span className="pulse-dot green" />
+            Todos os sistemas operacionais
           </div>
         </div>
-        <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-[var(--color-text-dim)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-danger)] transition-colors">
+
+        <div className="mb-3 flex items-center gap-3 px-2">
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center text-sm font-bold text-[var(--color-accent)] border border-emerald-500/10">
+            AP
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-sm font-bold">Antonio Pereira</div>
+            <div className="text-xs text-[var(--color-text-dim)]">Administrador</div>
+          </div>
+        </div>
+        <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-danger)]">
           <LogOut size={14} /> Sair do sistema
         </button>
       </div>

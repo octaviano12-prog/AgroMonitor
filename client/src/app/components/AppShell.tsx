@@ -39,8 +39,8 @@ export default function AppShell() {
       <Sidebar currentPage={page} onNavigate={setPage} open={sidebarOpen} />
       <div className="flex-1 flex flex-col min-w-0">
         <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} onNavigate={setPage} />
-        <main className="flex-1 overflow-y-auto px-7 py-6 xl:px-10 xl:py-8">
-          <div className="w-full max-w-[1920px] mx-auto">
+        <main className="flex-1 overflow-y-auto px-6 py-5 2xl:px-8 2xl:py-6">
+          <div className="w-full max-w-[1800px] mx-auto">
             {pages[page]}
           </div>
         </main>

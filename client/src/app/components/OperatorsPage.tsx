@@ -110,8 +110,8 @@ export default function OperatorsPage() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 w-full">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-[28px] font-bold tracking-tight">Operadores</h1>
-          <p className="text-sm text-[var(--color-text-secondary)] mt-1">
+          <h1 className="text-3xl font-black tracking-tight">Operadores</h1>
+          <p className="text-base text-[var(--color-text-secondary)] mt-1">
             {items.length} operadores cadastrados {source === "local" && "(modo local)"}
           </p>
         </div>
@@ -120,8 +120,8 @@ export default function OperatorsPage() {
         </button>
       </div>
 
-      <div className="glass-card p-4 flex items-center gap-4">
-        <div className="flex-1 flex items-center gap-2.5 px-3.5 py-3 rounded-lg border border-[var(--color-border-main)] bg-[var(--color-bg-input)]">
+      <div className="glass-card p-5 flex items-center gap-4">
+        <div className="flex-1 flex items-center gap-3 px-4 py-3.5 rounded-lg border border-[var(--color-border-main)] bg-[var(--color-bg-input)]">
           <Search size={16} className="text-[var(--color-text-dim)]" />
           <input value={search} onChange={(event) => setSearch(event.target.value)} type="text" placeholder="Buscar por nome, matricula, cargo..."
             className="bg-transparent text-sm outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-dim)] w-full" />
@@ -131,7 +131,7 @@ export default function OperatorsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-5">
         {filtered.map((operator, index) => (
           <motion.div key={operator.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.03 }}
-            className="glass-card glass-card-hover p-5">
+            className="glass-card glass-card-hover p-6">
             <div className="flex items-start gap-4">
               <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-[var(--color-accent)]/15 to-[var(--color-blue)]/15 flex items-center justify-center text-sm font-bold text-[var(--color-accent)] border border-[var(--color-accent)]/10">
                 {operator.name.split(" ").map((part) => part[0]).join("").slice(0, 3)}

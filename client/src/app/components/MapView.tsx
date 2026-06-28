@@ -47,7 +47,7 @@ export default function MapView() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 h-full flex flex-col max-w-[1600px] mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[22px] font-bold tracking-tight">Mapa Operacional</h1>
+          <h1 className="text-3xl font-black tracking-tight">Mapa Operacional</h1>
           <p className="text-[12px] text-[var(--color-text-dim)] mt-1">Visualização em tempo real de equipamentos e operações</p>
         </div>
         <div className="flex gap-1.5 p-1 rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-border-main)]">

@@ -155,8 +155,8 @@ export default function EquipmentPage() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 w-full">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-[28px] font-bold tracking-tight">Equipamentos</h1>
-          <p className="text-sm text-[var(--color-text-secondary)] mt-1">
+          <h1 className="text-3xl font-black tracking-tight">Equipamentos</h1>
+          <p className="text-base text-[var(--color-text-secondary)] mt-1">
             {items.length} equipamentos cadastrados {source === "local" && "(modo local)"}
           </p>
         </div>
@@ -165,20 +165,20 @@ export default function EquipmentPage() {
         </button>
       </div>
 
-      <div className="glass-card p-4 flex flex-wrap items-center gap-3">
-        <div className="flex-1 min-w-[260px] flex items-center gap-2.5 px-3.5 py-3 rounded-lg border border-[var(--color-border-main)] bg-[var(--color-bg-input)]">
+      <div className="glass-card p-5 flex flex-wrap items-center gap-3">
+        <div className="flex-1 min-w-[320px] flex items-center gap-3 px-4 py-3.5 rounded-lg border border-[var(--color-border-main)] bg-[var(--color-bg-input)]">
           <Search size={16} className="text-[var(--color-text-dim)]" />
           <input value={search} onChange={(event) => setSearch(event.target.value)} type="text" placeholder="Buscar por frota, modelo, operador..."
             className="bg-transparent text-sm outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-dim)] w-full" />
         </div>
         <div className="flex flex-wrap gap-1.5">
           {typeFilters.map((type) => (
-            <button key={type} onClick={() => setTypeFilter(type)} className={`px-3 py-2 rounded-md text-xs font-medium ${typeFilter === type ? "bg-[var(--color-accent)]/15 text-[var(--color-accent)]" : "bg-[var(--color-bg-input)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"}`}>{type}</button>
+            <button key={type} onClick={() => setTypeFilter(type)} className={`px-4 py-2.5 rounded-md text-sm font-bold ${typeFilter === type ? "bg-[var(--color-accent)]/15 text-[var(--color-accent)]" : "bg-[var(--color-bg-input)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"}`}>{type}</button>
           ))}
         </div>
         <div className="flex flex-wrap gap-1.5">
           {statusFilters.map((status) => (
-            <button key={status.value} onClick={() => setStatusFilter(status.value)} className={`px-3 py-2 rounded-md text-xs font-medium ${statusFilter === status.value ? "bg-[var(--color-blue)]/15 text-[var(--color-blue)]" : "bg-[var(--color-bg-input)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"}`}>{status.label}</button>
+            <button key={status.value} onClick={() => setStatusFilter(status.value)} className={`px-4 py-2.5 rounded-md text-sm font-bold ${statusFilter === status.value ? "bg-[var(--color-blue)]/15 text-[var(--color-blue)]" : "bg-[var(--color-bg-input)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"}`}>{status.label}</button>
           ))}
         </div>
       </div>

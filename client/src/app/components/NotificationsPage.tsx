@@ -11,7 +11,7 @@ export default function NotificationsPage() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5 max-w-[1000px] mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[22px] font-bold tracking-tight">Notificações</h1>
+          <h1 className="text-3xl font-black tracking-tight">Notificacoes</h1>
           <p className="text-[12px] text-[var(--color-text-dim)] mt-1">{notifications.filter(n => !n.read).length} não lidas</p>
         </div>
         <button className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[var(--color-border-main)] text-[11px] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] font-medium transition-colors">
