@@ -2,21 +2,24 @@ import rateLimit from 'express-rate-limit';
 
 export const rateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 1000,
   message: {
     status: 'error',
-    message: 'Too many requests, please try again later.',
+    message: 'Muitas requisicoes em pouco tempo. Aguarde alguns minutos e tente novamente.',
   },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.method === 'OPTIONS' || req.path === '/health',
 });
 
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 login attempts per windowMs
+  max: 30,
   message: {
     status: 'error',
-    message: 'Too many login attempts, please try again later.',
+    message: 'Muitas tentativas de login. Aguarde alguns minutos e tente novamente.',
   },
   skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
 });
