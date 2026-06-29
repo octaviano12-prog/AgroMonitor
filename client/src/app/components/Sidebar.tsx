@@ -34,11 +34,11 @@ const navItems: { id: PageId; icon: React.ElementType; label: string; badge?: nu
   { id: "settings", icon: Settings, label: "Configuracoes" },
 ];
 
-const secondaryItems = [
-  { icon: BarChart3, label: "Indicadores" },
-  { icon: MapPin, label: "Talhoes" },
-  { icon: Bell, label: "Alertas", badge: 8 },
-  { icon: Wrench, label: "Manutencoes" },
+const secondaryItems: { id: PageId; icon: React.ElementType; label: string; badge?: number }[] = [
+  { id: "dashboard", icon: BarChart3, label: "Indicadores" },
+  { id: "farms", icon: MapPin, label: "Talhoes" },
+  { id: "notifications", icon: Bell, label: "Alertas", badge: 8 },
+  { id: "equipment", icon: Wrench, label: "Manutencoes" },
 ];
 
 export default function Sidebar({
@@ -99,18 +99,26 @@ export default function Sidebar({
         })}
 
         <div className="mt-3 border-t border-[var(--color-border-main)] pt-3 space-y-1.5">
-          {secondaryItems.map((item) => (
+          {secondaryItems.map((item) => {
+            const active = currentPage === item.id;
+            return (
             <button
               key={item.label}
-              className="w-full flex items-center gap-4 rounded-lg px-5 py-4 text-[15px] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white transition-colors"
+              onClick={() => onNavigate(item.id)}
+              className={`relative w-full flex items-center gap-4 rounded-lg px-5 py-4 text-[15px] transition-colors ${
+                active ? "text-white font-bold" : "text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white"
+              }`}
+              style={active ? { background: "linear-gradient(90deg, rgba(34,197,94,0.18), rgba(34,197,94,0.05))" } : undefined}
             >
-              <item.icon size={22} />
+              {active ? <span className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-[var(--color-accent)]" /> : null}
+              <item.icon size={22} className={active ? "text-[var(--color-accent)]" : undefined} />
               <span className="flex-1 text-left">{item.label}</span>
-              {"badge" in item && item.badge ? (
+              {item.badge ? (
                 <span className="rounded-md bg-yellow-400 px-2 py-0.5 text-xs font-black text-black">{item.badge}</span>
               ) : null}
             </button>
-          ))}
+            );
+          })}
         </div>
       </nav>
 
@@ -135,7 +143,14 @@ export default function Sidebar({
             <div className="text-xs text-[var(--color-text-dim)]">Administrador</div>
           </div>
         </div>
-        <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-danger)]">
+        <button
+          onClick={() => {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            window.location.reload();
+          }}
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-danger)]"
+        >
           <LogOut size={14} /> Sair do sistema
         </button>
       </div>
