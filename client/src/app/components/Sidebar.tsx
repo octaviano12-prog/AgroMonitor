@@ -145,8 +145,9 @@ export default function Sidebar({
         </div>
         <button
           onClick={() => {
-            localStorage.removeItem("accessToken");
+            localStorage.removeItem("token");
             localStorage.removeItem("refreshToken");
+            localStorage.removeItem("demoMode");
             window.location.reload();
           }}
           className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-danger)]"
