@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Bell, CalendarDays, ChevronDown, Menu, Search, SlidersHorizontal, Sun } from "lucide-react";
+import { Bell, CalendarDays, ChevronDown, Menu, Search, SlidersHorizontal } from "lucide-react";
 import type { PageId } from "./AppShell";
 
 export default function Header({
@@ -20,62 +20,57 @@ export default function Header({
   }, []);
 
   return (
-    <header className="h-[76px] shrink-0 border-b border-[var(--color-border-main)] bg-[#050b14]/92 backdrop-blur-xl flex items-center gap-5 px-7 relative z-20">
+    <header className="h-[72px] shrink-0 border-b border-white/10 bg-[#07101b]/95 backdrop-blur-xl flex items-center gap-4 px-6 relative z-20">
       <button
         onClick={onToggleSidebar}
-        className="h-11 w-11 rounded-lg flex items-center justify-center text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white transition-colors"
+        className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/[0.06] hover:text-white"
         title="Alternar menu"
       >
-        <Menu size={24} />
+        <Menu size={22} />
       </button>
 
-      <div className="flex-1 flex items-center justify-end gap-4">
-        <div className="hidden lg:flex w-[430px] h-12 items-center gap-3 rounded-lg border border-[var(--color-border-bright)] bg-[var(--color-bg-input)] px-4">
-          <Search size={18} className="text-[var(--color-text-muted)]" />
-          <input
-            type="text"
-            placeholder="Buscar equipamentos, operadores..."
-            className="w-full bg-transparent text-sm text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)]"
-          />
+      <div className="hidden lg:flex h-11 w-[420px] items-center gap-3 rounded-lg border border-white/10 bg-black/18 px-4">
+        <Search size={18} className="text-slate-500" />
+        <input
+          type="text"
+          placeholder="Buscar frota, operador, fazenda..."
+          className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-600"
+        />
+      </div>
+
+      <div className="ml-auto flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2 rounded-lg border border-white/10 bg-black/18 px-3 py-2">
+          <span className="h-2 w-2 rounded-full bg-emerald-400" />
+          <span className="text-xs font-mono text-slate-400">{time}</span>
         </div>
 
-        <button className="hidden md:flex h-12 items-center gap-3 rounded-lg border border-[var(--color-border-bright)] bg-[var(--color-bg-input)] px-4 text-sm font-bold">
-          24/05/2024
-          <CalendarDays size={17} className="text-[var(--color-text-secondary)]" />
+        <button className="hidden md:flex h-11 items-center gap-2 rounded-lg border border-white/10 bg-black/18 px-4 text-sm font-bold text-slate-200">
+          <CalendarDays size={17} className="text-slate-500" />
+          Hoje
         </button>
 
-        <button className="hidden xl:flex h-12 items-center gap-3 rounded-lg bg-emerald-600 px-4 text-sm font-bold text-white">
+        <button className="hidden xl:flex h-11 items-center gap-2 rounded-lg bg-emerald-500 px-4 text-sm font-black text-slate-950">
           <SlidersHorizontal size={17} />
           Filtros
-          <ChevronDown size={15} />
-        </button>
-
-        <div className="hidden md:flex items-center gap-2 rounded-lg border border-[var(--color-border-main)] bg-[var(--color-bg-input)] px-3 py-2">
-          <span className="h-2 w-2 rounded-full bg-[var(--color-accent)]" />
-          <span className="text-xs font-mono text-[var(--color-text-secondary)]">{time}</span>
-        </div>
-
-        <button className="h-11 w-11 rounded-lg flex items-center justify-center text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white transition-colors">
-          <Sun size={20} />
         </button>
 
         <button
-          onClick={() => onNavigate("notifications")}
-          className="relative h-11 w-11 rounded-lg flex items-center justify-center text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white transition-colors"
+          onClick={() => onNavigate("alerts")}
+          className="relative flex h-11 w-11 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/[0.06] hover:text-white"
         >
           <Bell size={20} />
-          <span className="absolute right-2 top-2 rounded-full bg-emerald-500 px-1.5 text-[10px] font-black text-white">12</span>
+          <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-[#07101b]" />
         </button>
 
-        <div className="flex items-center gap-3 pl-4 border-l border-[var(--color-border-main)]">
-          <div className="h-11 w-11 rounded-full bg-gradient-to-br from-amber-200 to-orange-600 flex items-center justify-center text-sm font-black text-slate-950">
+        <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-black/18 py-1.5 pl-2 pr-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-300 to-emerald-700 text-sm font-black text-slate-950">
             VT
           </div>
           <div className="hidden md:block leading-tight">
-            <div className="text-sm font-bold">Vagner Tavares</div>
-            <div className="text-xs text-[var(--color-text-secondary)]">Administrador</div>
+            <div className="text-sm font-bold text-white">Vagner</div>
+            <div className="text-xs text-slate-500">Administrador</div>
           </div>
-          <ChevronDown size={16} className="text-[var(--color-text-secondary)]" />
+          <ChevronDown size={15} className="text-slate-500" />
         </div>
       </div>
     </header>

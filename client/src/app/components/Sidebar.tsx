@@ -1,10 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
 import {
+  AlertTriangle,
   BarChart3,
-  Bell,
   BrainCircuit,
-  Clock,
   FileText,
   LayoutDashboard,
   LogOut,
@@ -20,26 +19,50 @@ import {
 } from "lucide-react";
 import type { PageId } from "./AppShell";
 
-const navItems: { id: PageId; icon: React.ElementType; label: string; badge?: number }[] = [
+const mainItems: { id: PageId; icon: React.ElementType; label: string; badge?: number }[] = [
   { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { id: "equipment", icon: Tractor, label: "Equipamentos" },
   { id: "operators", icon: Users, label: "Operadores" },
   { id: "farms", icon: TreePine, label: "Fazendas" },
-  { id: "csv", icon: Upload, label: "CSV / SGPA" },
-  { id: "timeline", icon: Clock, label: "Monitoramento" },
+  { id: "plots", icon: MapPin, label: "Talhoes" },
   { id: "map", icon: Map, label: "Mapa" },
-  { id: "ai", icon: BrainCircuit, label: "Agro IA" },
+  { id: "alerts", icon: AlertTriangle, label: "Alertas", badge: 8 },
+  { id: "maintenance", icon: Wrench, label: "Manutencoes" },
+  { id: "indicators", icon: BarChart3, label: "Indicadores" },
   { id: "reports", icon: FileText, label: "Relatorios" },
-  { id: "notifications", icon: Bell, label: "Ocorrencias", badge: 5 },
   { id: "settings", icon: Settings, label: "Configuracoes" },
 ];
 
-const secondaryItems: { id: PageId; icon: React.ElementType; label: string; badge?: number }[] = [
-  { id: "dashboard", icon: BarChart3, label: "Indicadores" },
-  { id: "farms", icon: MapPin, label: "Talhoes" },
-  { id: "notifications", icon: Bell, label: "Alertas", badge: 8 },
-  { id: "equipment", icon: Wrench, label: "Manutencoes" },
+const toolItems: { id: PageId; icon: React.ElementType; label: string }[] = [
+  { id: "csv", icon: Upload, label: "Importar CSV" },
+  { id: "ai", icon: BrainCircuit, label: "Agro IA" },
 ];
+
+function NavButton({
+  item,
+  active,
+  onClick,
+}: {
+  item: { icon: React.ElementType; label: string; badge?: number };
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`group relative flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-sm transition-colors ${
+        active ? "bg-emerald-500/12 text-white" : "text-slate-400 hover:bg-white/[0.045] hover:text-white"
+      }`}
+    >
+      {active ? <span className="absolute left-0 top-1/2 h-7 w-1 -translate-y-1/2 rounded-r-full bg-emerald-400" /> : null}
+      <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${active ? "bg-emerald-500/18 text-emerald-300" : "bg-white/[0.035] text-slate-500 group-hover:text-white"}`}>
+        <item.icon size={19} />
+      </span>
+      <span className="flex-1 text-left font-semibold">{item.label}</span>
+      {item.badge ? <span className="rounded-full bg-red-500 px-2 py-0.5 text-[11px] font-black text-white">{item.badge}</span> : null}
+    </button>
+  );
+}
 
 export default function Sidebar({
   currentPage,
@@ -54,94 +77,48 @@ export default function Sidebar({
 
   return (
     <motion.aside
-      initial={{ x: -320 }}
+      initial={{ x: -292 }}
       animate={{ x: 0 }}
       transition={{ type: "spring", damping: 30, stiffness: 300 }}
-      className="w-[320px] h-screen shrink-0 overflow-hidden border-r border-[var(--color-border-main)] bg-[#050b14] relative flex flex-col"
+      className="relative flex h-screen w-[292px] shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[#07101b]"
     >
-      <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-emerald-500/10 to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-emerald-500/12 to-transparent" />
 
-      <div className="relative z-10 h-[92px] px-7 flex items-center gap-4 border-b border-[var(--color-border-main)]">
-        <div className="w-[52px] h-[52px] rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-          <Tractor size={25} className="text-white" />
+      <div className="relative z-10 flex h-[86px] items-center gap-3 border-b border-white/10 px-5">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20">
+          <Tractor size={25} />
         </div>
         <div>
-          <div className="text-2xl font-black leading-none tracking-tight">
-            AGRO<span className="text-white/80">MONITOR</span>
-          </div>
-          <div className="mt-1 text-[11px] font-black tracking-[0.28em] text-[var(--color-accent)]">PRO</div>
+          <div className="text-xl font-black tracking-tight">AgroMonitor</div>
+          <div className="text-[10px] font-black uppercase tracking-[0.32em] text-emerald-300">Operacional</div>
         </div>
       </div>
 
-      <nav className="relative z-10 flex-1 overflow-y-auto px-4 py-5 space-y-1.5">
-        {navItems.map((item, index) => {
-          const active = currentPage === item.id;
-          return (
-            <motion.button
-              key={item.id}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.025 }}
-              onClick={() => onNavigate(item.id)}
-              className={`relative w-full flex items-center gap-4 rounded-lg px-5 py-4 text-[15px] transition-colors ${
-                active ? "text-white font-bold" : "text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white"
-              }`}
-              style={active ? { background: "linear-gradient(90deg, rgba(34,197,94,0.24), rgba(34,197,94,0.06))" } : undefined}
-            >
-              {active ? <span className="absolute left-0 top-1/2 h-9 w-1 -translate-y-1/2 rounded-r-full bg-[var(--color-accent)]" /> : null}
-              <item.icon size={22} className={active ? "text-[var(--color-accent)]" : "text-[var(--color-text-secondary)]"} />
-              <span className="flex-1 text-left">{item.label}</span>
-              {item.badge ? (
-                <span className="rounded-md bg-red-500 px-2 py-0.5 text-xs font-black text-white">{item.badge}</span>
-              ) : null}
-            </motion.button>
-          );
-        })}
+      <nav className="relative z-10 flex-1 overflow-y-auto px-3 py-4">
+        <div className="mb-3 px-3 text-[11px] font-black uppercase tracking-[0.18em] text-slate-600">Operacao</div>
+        <div className="space-y-1">
+          {mainItems.map((item) => (
+            <NavButton key={item.id} item={item} active={currentPage === item.id} onClick={() => onNavigate(item.id)} />
+          ))}
+        </div>
 
-        <div className="mt-3 border-t border-[var(--color-border-main)] pt-3 space-y-1.5">
-          {secondaryItems.map((item) => {
-            const active = currentPage === item.id;
-            return (
-            <button
-              key={item.label}
-              onClick={() => onNavigate(item.id)}
-              className={`relative w-full flex items-center gap-4 rounded-lg px-5 py-4 text-[15px] transition-colors ${
-                active ? "text-white font-bold" : "text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)] hover:text-white"
-              }`}
-              style={active ? { background: "linear-gradient(90deg, rgba(34,197,94,0.18), rgba(34,197,94,0.05))" } : undefined}
-            >
-              {active ? <span className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-[var(--color-accent)]" /> : null}
-              <item.icon size={22} className={active ? "text-[var(--color-accent)]" : undefined} />
-              <span className="flex-1 text-left">{item.label}</span>
-              {item.badge ? (
-                <span className="rounded-md bg-yellow-400 px-2 py-0.5 text-xs font-black text-black">{item.badge}</span>
-              ) : null}
-            </button>
-            );
-          })}
+        <div className="mt-5 border-t border-white/10 pt-4">
+          <div className="mb-3 px-3 text-[11px] font-black uppercase tracking-[0.18em] text-slate-600">Ferramentas</div>
+          <div className="space-y-1">
+            {toolItems.map((item) => (
+              <NavButton key={item.id} item={item} active={currentPage === item.id} onClick={() => onNavigate(item.id)} />
+            ))}
+          </div>
         </div>
       </nav>
 
-      <div className="relative z-10 border-t border-[var(--color-border-main)] p-5">
-        <div className="glass-card p-4 mb-4">
-          <div className="mb-3 flex items-center justify-between">
-            <div className="text-sm font-bold">Status do Sistema</div>
-            <ShieldCheck size={17} className="text-[var(--color-accent)]" />
+      <div className="relative z-10 border-t border-white/10 p-4">
+        <div className="rounded-lg border border-emerald-500/15 bg-emerald-500/8 p-4">
+          <div className="mb-2 flex items-center gap-2 text-sm font-bold">
+            <ShieldCheck size={17} className="text-emerald-300" />
+            Sistema online
           </div>
-          <div className="flex items-center gap-2 text-xs text-[var(--color-text-secondary)]">
-            <span className="pulse-dot green" />
-            Todos os sistemas operacionais
-          </div>
-        </div>
-
-        <div className="mb-3 flex items-center gap-3 px-2">
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center text-sm font-bold text-[var(--color-accent)] border border-emerald-500/10">
-            AP
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="truncate text-sm font-bold">Antonio Pereira</div>
-            <div className="text-xs text-[var(--color-text-dim)]">Administrador</div>
-          </div>
+          <div className="text-xs leading-5 text-slate-400">API, banco e painel monitorados para operacao diaria.</div>
         </div>
         <button
           onClick={() => {
@@ -150,9 +127,9 @@ export default function Sidebar({
             localStorage.removeItem("demoMode");
             window.location.reload();
           }}
-          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-danger)]"
+          className="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-500 transition-colors hover:bg-red-500/10 hover:text-red-300"
         >
-          <LogOut size={14} /> Sair do sistema
+          <LogOut size={16} /> Sair
         </button>
       </div>
     </motion.aside>
